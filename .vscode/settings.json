@@ -1,0 +1,40 @@
+{
+  // IntelliSense is provided by clangd; disable the cpptools engine to avoid duplicate diagnostics.
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}/build/linux-debug",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=never"
+  ],
+
+  // CMake Tools – driven by CMakePresets.json
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": true,
+  "cmake.generator": "Ninja",
+  "cmake.exportCompileCommandsFile": true,
+  "cmake.options.statusBarVisibility": "visible",
+
+  // Formatting
+  "editor.formatOnSave": true,
+  "[cpp]": { "editor.defaultFormatter": "xaver.clang-format" },
+  "[c]": { "editor.defaultFormatter": "xaver.clang-format" },
+  "clang-format.executable": "/usr/bin/clang-format",
+
+  "files.associations": {
+    "*.h": "cpp",
+    "*.hpp": "cpp",
+    "*.tpp": "cpp"
+  },
+  "files.exclude": {
+    "**/build": false
+  },
+  "search.exclude": {
+    "**/build": true
+  },
+
+  // Ensure GUI apps launched from the terminal appear in the noVNC virtual desktop.
+  "terminal.integrated.env.linux": {
+    "DISPLAY": ":1"
+  }
+}

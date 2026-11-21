@@ -1,0 +1,76 @@
+{
+  "name": "C++ Desktop (Linux + Windows cross-compile)",
+  "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "vscode",
+      "webPort": "6080",
+      "vncPort": "5901"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Virtual Desktop (noVNC)",
+      "onAutoForward": "openBrowser"
+    },
+    "5901": {
+      "label": "VNC",
+      "onAutoForward": "silent"
+    }
+  },
+  "containerEnv": {
+    "DISPLAY": ":1",
+    "WINEARCH": "win64",
+    "WINEDEBUG": "-all"
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "xaver.clang-format",
+        "vadimcn.vscode-lldb",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "clangd.arguments": [
+          "--compile-commands-dir=${workspaceFolder}/build/linux-debug",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=never"
+        ],
+        "cmake.configureOnOpen": true,
+        "cmake.useCMakePresets": "always",
+        "cmake.generator": "Ninja",
+        "cmake.options.statusBarVisibility": "visible",
+        "cmake.exportCompileCommandsFile": true,
+        "editor.formatOnSave": true,
+        "[cpp]": { "editor.defaultFormatter": "xaver.clang-format" },
+        "[c]": { "editor.defaultFormatter": "xaver.clang-format" },
+        "files.associations": {
+          "*.h": "cpp",
+          "*.hpp": "cpp",
+          "*.tpp": "cpp"
+        },
+        "terminal.integrated.env.linux": {
+          "DISPLAY": ":1"
+        }
+      }
+    }
+  }
+}

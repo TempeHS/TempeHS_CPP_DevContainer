@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build: Linux (Debug)",
+      "type": "shell",
+      "command": "cmake --preset linux-debug && cmake --build --preset linux-debug",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build: Linux (Release)",
+      "type": "shell",
+      "command": "cmake --preset linux-release && cmake --build --preset linux-release",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build: Windows x64 (Release, MinGW)",
+      "type": "shell",
+      "command": "cmake --preset windows-release && cmake --build --preset windows-release",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Build: All (Linux + Windows)",
+      "type": "shell",
+      "command": "cmake --workflow --preset linux-release && cmake --workflow --preset windows-release",
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Run: Linux build",
+      "type": "shell",
+      "command": "./build/linux-debug/hello",
+      "dependsOn": "Build: Linux (Debug)",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Windows build (Wine)",
+      "type": "shell",
+      "command": "wine ./build/windows-release/hello.exe",
+      "dependsOn": "Build: Windows x64 (Release, MinGW)",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Linux build in virtual desktop (xterm)",
+      "type": "shell",
+      "command": "DISPLAY=:1 xterm -hold -e ./build/linux-debug/hello &",
+      "dependsOn": "Build: Linux (Debug)",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Windows build in virtual desktop (Wine + xterm)",
+      "type": "shell",
+      "command": "DISPLAY=:1 xterm -hold -e wine ./build/windows-release/hello.exe &",
+      "dependsOn": "Build: Windows x64 (Release, MinGW)",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean: remove all build directories",
+      "type": "shell",
+      "command": "rm -rf build",
+      "problemMatcher": []
+    }
+  ]
+}

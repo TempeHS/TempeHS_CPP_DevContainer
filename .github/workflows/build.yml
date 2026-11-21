@@ -1,0 +1,63 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux-and-windows:
+    name: Linux + Windows (MinGW cross-compile)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build mingw-w64
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+
+      - name: Build Linux
+        run: |
+          cmake --preset linux-release
+          cmake --build --preset linux-release
+          ./build/linux-release/hello
+
+      - name: Build Windows (MinGW)
+        run: |
+          cmake --preset windows-release
+          cmake --build --preset windows-release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hello-linux-x64
+          path: build/linux-release/hello
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hello-windows-x64
+          path: build/windows-release/hello.exe
+
+  macos:
+    name: macOS (universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ninja
+        run: brew install ninja
+
+      - name: Build macOS
+        run: |
+          cmake --preset macos-release
+          cmake --build --preset macos-release
+          ./build/macos-release/hello
+          lipo -info build/macos-release/hello
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hello-macos-universal
+          path: build/macos-release/hello
